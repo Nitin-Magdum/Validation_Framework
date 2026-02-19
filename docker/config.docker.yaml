@@ -1,0 +1,43 @@
+app_name: DataValidationFramework
+
+spark_config:
+  spark.master: "local[*]"
+  # Inside Docker the jars are at /app/jars/
+  spark.driver.extraClassPath: "/app/jars/postgresql-42.2.18.jar"
+  spark.jars: "/app/jars/postgresql-42.2.18.jar"
+
+# ── Source DB (CSV files mounted into /app/data) ───────────────────────────
+source_db:
+  type: csv
+  path: "/app/data/source/"
+  format_options:
+    header: "true"
+    inferSchema: "true"
+
+# ── Target DB ──────────────────────────────────────────────────────────────
+target_db:
+  type: csv
+  path: "/app/data/target/"
+  format_options:
+    header: "true"
+    inferSchema: "true"
+
+# ── Result DB — PostgreSQL container (service name = postgres) ─────────────
+result_db:
+  type: jdbc
+  url: "jdbc:postgresql://postgres:5432/postgres"   # 'postgres' = docker service name
+  user: postgres
+  password: "1234"
+  driver: org.postgresql.Driver
+  summary_table: validation_summary
+  error_table: validation_errors
+
+# ── Tables to Validate ─────────────────────────────────────────────────────
+tables_to_validate:
+  - primary_key: emp_id
+    source:
+      table_name: employees.csv
+      schema: ""
+    target:
+      table_name: employees.csv
+      schema: ""
