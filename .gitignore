@@ -205,3 +205,13 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+# ── Validation Framework ───────────────────────────────────────────────────
+# JDBC driver JARs (large binary, download separately)
+jars/
+
+# Local test data
+data/
+
+# Config with credentials — commit config.example.yaml instead
+config/config.yaml
