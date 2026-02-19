@@ -24,7 +24,7 @@ services:
       postgres:
         condition: service_healthy
     volumes:
-      - ./config/config.docker.yaml:/app/config/config.yaml:ro   # mount docker config
+      - ./docker/config.docker.yaml:/app/config/config.yaml:ro   # mount docker config
       - ./data:/app/data:ro                                       # mount source/target data
     environment:
       - PYSPARK_PYTHON=python3
