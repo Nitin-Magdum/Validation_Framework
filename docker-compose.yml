@@ -1,0 +1,32 @@
+services:
+
+  # ── PostgreSQL result database ─────────────────────────────────────────────
+  postgres:
+    image: postgres:15
+    container_name: validation_postgres
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: "1234"
+    ports:
+      - "5433:5432"          # expose on 5433 to avoid clash with local PG
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  # ── Validation Framework ───────────────────────────────────────────────────
+  validator:
+    build: .
+    container_name: validation_runner
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ./config/config.docker.yaml:/app/config/config.yaml:ro   # mount docker config
+      - ./data:/app/data:ro                                       # mount source/target data
+    environment:
+      - PYSPARK_PYTHON=python3
+      - PYSPARK_DRIVER_PYTHON=python3
+    command: ["--config", "config/config.yaml"]

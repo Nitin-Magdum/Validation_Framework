@@ -1,0 +1,20 @@
+# Git ignored files (already in .gitignore, also excluded from Docker build)
+.git/
+.gitignore
+*.log
+
+# Local config with credentials (mounted at runtime instead)
+config/config.yaml
+config/config.docker.yaml
+
+# Local test data (mounted at runtime)
+data/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Docs (not needed inside container)
+README.md
+ARCHITECTURE.md

@@ -215,3 +215,4 @@ data/
 
 # Config with credentials — commit config.example.yaml instead
 config/config.yaml
+config/config.docker.yaml
