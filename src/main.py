@@ -6,6 +6,7 @@ import psycopg2
 import yaml
 from pyspark.sql import SparkSession
 from validator import DataValidator
+from adaptive_validator import AdaptiveValidator
 
 # ── ANSI colour helpers ──────────────────────────────────────────────────────
 GREEN = "\033[92m"
@@ -97,7 +98,10 @@ def main():
     parser = argparse.ArgumentParser(description="Data Validation Framework")
     parser.add_argument("--config", default="config/config.yaml",
                         help="Path to YAML config file (default: config/config.yaml)")
+    parser.add_argument("--adaptive", default="true",
+                        help="Enable adaptive ML validation (default: true). Use 'false' to disable.")
     args = parser.parse_args()
+    use_adaptive = args.adaptive.lower() not in ("false", "0", "no")
     config_path = args.config
 
     if not os.path.exists(config_path):
@@ -135,7 +139,12 @@ def main():
 
     # ── Step 3: Run Validation ────────────────────────────────────────────────
     try:
-        validator = DataValidator(spark, config)
+        if use_adaptive and config.get("ml_config", {}).get("enabled", False):
+            logger.info("Using AdaptiveValidator (ML mode ON)")
+            validator = AdaptiveValidator(spark, config)
+        else:
+            logger.info("Using standard DataValidator (ML mode OFF)")
+            validator = DataValidator(spark, config)
         tables = config.get("tables_to_validate", [])
         if not tables:
             logger.warning("No tables found in config to validate.")
