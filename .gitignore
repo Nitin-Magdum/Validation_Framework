@@ -216,3 +216,10 @@ data/
 # Config with credentials — commit config.example.yaml instead
 config/config.yaml
 config/config.docker.yaml
+
+# Sensitive original source files (public stubs in public_src/)
+src/
+
+# Machine Learning models & notes
+models/
+ML_ALGORITHM.md
