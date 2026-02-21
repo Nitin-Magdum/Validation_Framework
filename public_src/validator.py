@@ -116,6 +116,7 @@ class DataValidator:
         """
         pass
 
+
     def log_summary(self, run_id, table, status, message, s_cnt=0, t_cnt=0, metrics=""):
         """
         Logs the final summary of the validation run to the results table.

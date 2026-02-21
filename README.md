@@ -9,12 +9,13 @@ A robust, config-driven framework to validate data between Source and Target dat
 - **YAML Configuration** — all connections, tables, and overrides in one clean file
 - **Per-Table DB Overrides** — source and target can point to different databases/tables per table entry
 - **Sequential Validation Pipeline**:
-  1. **DDL Check** — column names and data types must match
-  2. **Row Count Check** — total record counts must match
-  3. **Aggregates Check** — averages (numeric) and average string lengths
-  4. **Deep Row Validation** — row-by-row hash comparison (missing rows + value mismatches at column level)
-- **PostgreSQL Result Storage** — summary and error tables auto-created on first run
-- **Coloured Terminal Output** — green ✔ for connection success and result storage
+  1. **Source & Target Pre-Flight Check** — tests connection paths/credentials automatically with up to 5 retries.
+  2. **DDL Check** — column names and data types must match
+  3. **Row Count Check** — total record counts must match
+  4. **Aggregates Check** — averages (numeric) and average string lengths
+  5. **Deep Row Validation** — row-by-row hash comparison (missing rows + value mismatches at column level)
+- **PostgreSQL Result Storage** — summary and error tables auto-created on first run (with 5 connection retries on boot)
+- **Coloured Terminal Output** — green ✔ for connection success and red ✘ for connection failures
 
 ---
 
@@ -145,9 +146,10 @@ python src/main.py --config /path/to/your/config.yaml
 ## What Happens at Runtime
 
 ```
-1. ✔  PostgreSQL connectivity check  (prints green on success)
+1. ✔  PostgreSQL connectivity check (up to 5 retries; prints green on success)
 2.    Spark session initialised
-3.    For each table in config:
+3.    Pre-flight connectivity checks for all Source & Target databases (up to 5 retries)
+4.    For each table in config:
         a. DDL check
         b. Row count check
         c. Aggregate check
