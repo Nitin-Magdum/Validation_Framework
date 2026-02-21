@@ -10,12 +10,14 @@
 flowchart TD
     A([User runs main.py\n--config config.yaml]) --> B[Load YAML Config]
     B --> C{result_db type\n= jdbc?}
-    C -- Yes --> D[Check PostgreSQL\nConnectivity via psycopg2]
-    D -- Fail --> E([Exit with error])
-    D -- Pass --> F[✔ Print green success\nAuto-create result tables]
+    C -- Yes --> D["Check PostgreSQL\nConnectivity (Up to 5 retries)"]
+    D -- Fail --> E([Exit with error\nPrint red ✘])
+    D -- Pass --> F["✔ Print green success\nAuto-create result tables"]
     C -- No --> F
     F --> G[Start Spark Session]
-    G --> H[Loop: tables_to_validate]
+    G --> G1["Run Pre-Flight Checks\n(Source & Target DBs, 5 Retries)"]
+    G1 -- Fail --> G2([Exit with error\nPrint red ✘])
+    G1 -- Pass --> H[Loop: tables_to_validate]
     H --> I[DataValidator\n.run_validation]
     I --> J{More tables?}
     J -- Yes --> H
