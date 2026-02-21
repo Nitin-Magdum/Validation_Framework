@@ -116,34 +116,6 @@ class DataValidator:
         """
         pass
 
-    def check_connection_with_retry(self, config, schema, table_name, max_retries=5, delay_sec=5):
-        """
-        Generic connection checker that attempts to read the schema of the source/target.
-        Retries up to `max_retries` with a delay of `delay_sec` between attempts.
-        
-        Args:
-            config (dict): Configuration defining the source/target dataset.
-            schema (str): Database schema or folder path.
-            table_name (str): Table name or filename.
-            max_retries (int): Number of connection attempts.
-            delay_sec (int): Delay between retry attempts.
-            
-        Returns:
-            bool: True if connection is successful, False otherwise.
-        """
-        pass
-
-    def run_preflight_checks(self, tables):
-        """
-        Iterates over all tables and verifies connectivity for both source and target.
-        
-        Args:
-            tables (list): List of table configurations to attempt connection to.
-            
-        Returns:
-            bool: False if ANY connection fails, True if all succeed.
-        """
-        pass
 
     def log_summary(self, run_id, table, status, message, s_cnt=0, t_cnt=0, metrics=""):
         """
